@@ -32,7 +32,7 @@ def get_maxi_id(source_name):
 
     #Return the MAXI ID for the source
     print("Fetching MAXI data ...")
-    return f"{ra_str[0][0:4]}{dec_str[0][0:3]}{dec_str[0][4]}"
+    return f"{ra_str[0][0:4]}{dec_str[0][0:4]}"
 
 def fetch_maxi_data(maxi_id):
     """
