@@ -40,7 +40,7 @@ def plot_swift_lc(data, source_name):
     error = data[2][mask]
 
     # Set up figure and axes
-    fig, ax = plt.subplots(dpi=300)  # High resolution
+    fig, ax = plt.subplots()  # High resolution
 
     # Plot error bars with transparency
     ax.errorbar(time, rate, yerr=error, fmt=" ", 
@@ -62,12 +62,6 @@ def plot_swift_lc(data, source_name):
     ax.minorticks_on()
     ax.grid(True, linestyle="--", linewidth=0.5, alpha=0.6)
 
-    # Remove top & right spines for a cleaner look
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-
-    # Adjust layout and show
-    plt.legend()
     plt.tight_layout()
     plt.show()
 
