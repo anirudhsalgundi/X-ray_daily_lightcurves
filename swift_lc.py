@@ -1,6 +1,6 @@
-import pandas as pd
+import pandas as pd # type: ignore
 import argparse
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt # type: ignore
 
 def get_swift_data(source_name):
     """
