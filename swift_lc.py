@@ -1,7 +1,3 @@
-from astropy.coordinates import SkyCoord
-import astropy.units as u
-from astroquery.simbad import Simbad
-import numpy as np
 import pandas as pd
 import argparse
 import matplotlib.pyplot as plt
@@ -35,21 +31,43 @@ def get_swift_data(source_name):
 
 def plot_swift_lc(data, source_name):
     """
-    Plots the Swift/BAT light curve data.
+    Plots the Swift/BAT light curve data in a publication-quality format.
     """
     # Extract columns
-    mask = data[1] > 0  # Remove negative times
+    mask = data[1] > 0  # Filter negative count rates
     time = data[0][mask]
     rate = data[1][mask]
     error = data[2][mask]
 
-    # Plot
-    fig, ax = plt.subplots()
-    ax.errorbar(time, rate, yerr=error, fmt=".", ms = 1, elinewidth=1, capsize=0.5, c = "C3", alpha = 0.5)
-    ax.errorbar(time, rate, fmt=".", ms = 1, c = "C3", alpha = 1)
-    ax.set_xlabel("Time (MJD)")
-    ax.set_ylabel("Count Rate (12.0 - 50.0 keV)")
-    plt.title(f"Swift/BAT Light Curve of {source_name}")
+    # Set up figure and axes
+    fig, ax = plt.subplots(dpi=300)  # High resolution
+
+    # Plot error bars with transparency
+    ax.errorbar(time, rate, yerr=error, fmt=" ", 
+                elinewidth=0.8, capsize=1.2, capthick=0.8, alpha=0.4, color="C3")
+    
+    # Plot data points with higher opacity
+    ax.errorbar(time, rate, fmt="o", ms=2, color="C3", alpha=1, label="Swift/BAT Data")
+
+    # Axis labels
+    ax.set_xlabel("Time (MJD)", fontsize=14, fontweight='bold')
+    ax.set_ylabel("Count Rate (12-50 keV)", fontsize=14, fontweight='bold')
+
+    # Title
+    ax.set_title(f"Swift/BAT Light Curve of {source_name}", fontsize=15, fontweight='bold')
+
+    # Aesthetic improvements
+    ax.tick_params(axis="both", which="major", labelsize=12, direction="in", length=5)
+    ax.tick_params(axis="both", which="minor", direction="in", length=3)
+    ax.minorticks_on()
+    ax.grid(True, linestyle="--", linewidth=0.5, alpha=0.6)
+
+    # Remove top & right spines for a cleaner look
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+
+    # Adjust layout and show
+    plt.legend()
     plt.tight_layout()
     plt.show()
 
