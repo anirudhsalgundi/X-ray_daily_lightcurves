@@ -29,7 +29,7 @@ def get_swift_data(source_name):
     return None  # Return None if both URLs fail
 
 
-def plot_swift_lc(data, source_name):
+def plot_swift_lc(data, source_name, tstop, tstart):
     """
     Plots the Swift/BAT light curve data in a publication-quality format.
     """
@@ -48,7 +48,7 @@ def plot_swift_lc(data, source_name):
     
     # Plot data points with higher opacity
     ax.errorbar(time, rate, fmt="o", ms=2, color="C3", alpha=1, label="Swift/BAT Data")
-
+    ax.set_xlim(tstart, tstop)
     # Axis labels
     ax.set_xlabel("Time (MJD)", fontsize=14, fontweight='bold')
     ax.set_ylabel("Count Rate (12-50 keV)", fontsize=14, fontweight='bold')
@@ -67,14 +67,20 @@ def plot_swift_lc(data, source_name):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Plot MAXI light curve for a given source.")
+    parser = argparse.ArgumentParser(description="Plot Swift/BAT light curve for a given source.")
     parser.add_argument("-s", "--source", type=str, required=True, help="Name of the source")
+    parser.add_argument("-start", type=float, required=False, help="Custom start time for the light curve (Default: min time in data)")
+    parser.add_argument("-stop", type=float, required=False, help="Custom stop time for the light curve (Default: max time in data)")
     args = parser.parse_args()
 
     source_name = args.source
     swift_data = get_swift_data(source_name)
 
     if swift_data is not None:
-        plot_swift_lc(swift_data, source_name) # Check first few rows
+        # Determine start and stop time
+        tstart = args.start if args.start is not None else swift_data[0].min()
+        tstop = args.stop if args.stop is not None else swift_data[0].max()
+
+        plot_swift_lc(swift_data, source_name, tstart, tstop)
     else:
         print("No data available.")
