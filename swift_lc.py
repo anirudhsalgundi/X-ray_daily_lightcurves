@@ -29,7 +29,7 @@ def get_swift_data(source_name):
     return None  # Return None if both URLs fail
 
 
-def plot_swift_lc(data, source_name, tstop, tstart):
+def plot_swift_lc(data, source_name, tstart, tstop):
     """
     Plots the Swift/BAT light curve data in a publication-quality format.
     """
@@ -78,9 +78,10 @@ if __name__ == "__main__":
 
     if swift_data is not None:
         # Determine start and stop time
-        tstart = args.start if args.start is not None else swift_data[0].min()
-        tstop = args.stop if args.stop is not None else swift_data[0].max()
+        tstart = args.start if args.start is not None else min(swift_data[0])
+        tstop = args.stop if args.stop is not None else max(swift_data[0])
 
         plot_swift_lc(swift_data, source_name, tstart, tstop)
     else:
         print("No data available.")
+
