@@ -1,5 +1,6 @@
 import pandas as pd # type: ignore
 import argparse
+import numpy as np # type: ignore
 import matplotlib.pyplot as plt # type: ignore
 
 def get_swift_data(source_name):
@@ -33,8 +34,9 @@ def plot_swift_lc(data, source_name, tstart, tstop):
     """
     Plots the Swift/BAT light curve data in a publication-quality format.
     """
-    # Extract columns
-    mask = data[1] > 0  # Filter negative count rates
+
+    # Apply mask: Remove negative count rates & large errors
+    mask = (data[1] > 0) & (data[2] < 0.04)
     time = data[0][mask]
     rate = data[1][mask]
     error = data[2][mask]
@@ -49,6 +51,7 @@ def plot_swift_lc(data, source_name, tstart, tstop):
     # Plot data points with higher opacity
     ax.errorbar(time, rate, fmt="o", ms=2, color="C3", alpha=1, label="Swift/BAT Data")
     ax.set_xlim(tstart, tstop)
+    ax.set_ylim(-0.005, 1.1 * max(rate))
     # Axis labels
     ax.set_xlabel("Time (MJD)", fontsize=14, fontweight='bold')
     ax.set_ylabel("Count Rate (12-50 keV)", fontsize=14, fontweight='bold')
